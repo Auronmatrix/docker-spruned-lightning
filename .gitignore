@@ -1,0 +1,5 @@
+lnd-data/data/
+lnd-data/logs/
+tls.cert
+tls.key
+*.macaroon

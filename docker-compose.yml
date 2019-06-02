@@ -1,0 +1,42 @@
+version: "3.3"
+services:
+  spruned:
+    build: https://github.com/thorie7912/docker-spruned.git
+    container_name: spruned
+    volumes:
+      - "spruned-data:/spruned"
+    ports:
+      - 18332:18332 #testnet RPC
+      - 38332:38332 #zmqpath / zmqpubrawblock
+      - 38333:38333 #zmqpubrawtx
+      - 28332:28332 #zmqpubrawtx
+    command:
+      --debug
+      --datadir /spruned
+      --rpcbind 0.0.0.0
+      --cache-size 50
+      --network bitcoin.testnet
+      --rpcuser user
+      --rpcpassword pass
+      --zmqpubhashtx=tcp://0.0.0.0:28332
+      --zmqpubhashblock=tcp://0.0.0.0:28332
+      --zmqpubrawblock=tcp://0.0.0.0:28332
+      --zmqpubrawtx=tcp://0.0.0.0:28332
+    networks:
+      - dslightning-net
+  lnd:
+    image: lightninglabs/lnd
+    container_name: lnd
+    volumes:
+      - "./lnd-data:/root/.lnd"
+    ports:
+      - 10009:10009 #RPC
+      - 8080:8080 #gRPC
+    networks:
+      - dslightning-net
+
+networks:
+  dslightning-net:
+
+volumes:
+ spruned-data:
